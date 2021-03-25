@@ -2,18 +2,28 @@ const path = require("path");
 const fs = require("fs");
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
+
 exports.getPosts = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+  let totalItems;
   Post.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Post.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
     .then((posts) => {
-      if (!posts) {
-        res.status(404).send({ message: "posts are not found!" });
-      }
-      res
-        .status(200)
-        .json({ posts, message: "posts are Fetched successfully." });
+      res.status(200).json({
+        message: "Fetched posts successfully.",
+        posts: posts,
+        totalItems: totalItems,
+      });
     })
     .catch((err) => {
-      res.status(500).send({ message: err });
+      res.status(404).send({ message: "failed to save a post" || err });
     });
 };
 
@@ -46,7 +56,9 @@ exports.createPost = (req, res, next) => {
         post: post,
       })
       .catch((err) => {
-        res.status(404).send({ message: "failed to save a post" || err });
+        return res
+          .status(404)
+          .send({ message: "failed to save a post" || err });
       });
   });
 };
