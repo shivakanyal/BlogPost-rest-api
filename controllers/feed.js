@@ -1,3 +1,5 @@
+const path = require("path");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 exports.getPosts = (req, res, next) => {
@@ -8,7 +10,7 @@ exports.getPosts = (req, res, next) => {
       }
       res
         .status(200)
-        .json({ posts, message: "posts are Fetcheds successfully." });
+        .json({ posts, message: "posts are Fetched successfully." });
     })
     .catch((err) => {
       res.status(500).send({ message: err });
@@ -50,8 +52,8 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.getPost = (req, res, next) => {
-  const id = req.params.postId;
-  Post.findById(id)
+  const postId = req.params.postId;
+  Post.findById(postId)
     .then((post) => {
       if (!post) {
         res.status(404).send({ message: "post is not found." });
@@ -61,4 +63,48 @@ exports.getPost = (req, res, next) => {
     .catch((err) => {
       res.status(500).send({ message: "Post is not found" });
     });
+};
+
+exports.updatePost = (req, res, next) => {
+  const postId = req.params.postId;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: "Validation is failed entered data is incorrect",
+      errors: errors.array(),
+    });
+  }
+  const title = req.body.title;
+  const content = req.body.content;
+  let imageUrl = req.body.image;
+  if (req.file) {
+    imageUrl = req.file.path.replace("\\", "/");
+  }
+  if (!imageUrl) {
+    return res.status(422).send({ message: "Image is not Provided.." });
+  }
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) return res.status(422).send({ message: "post is not found" });
+      if (imageUrl !== post.imageUrl) {
+        clearImage(post.imageUrl);
+      }
+      post.title = title;
+      post.content = content;
+      post.imageUrl = imageUrl;
+      return post.save();
+    })
+    .then((post) => {
+      res
+        .status(200)
+        .json({ message: "post is updated successfully", res: post });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, "..", filePath);
+  fs.unlink(filePath, (err) => console.log(err));
 };
