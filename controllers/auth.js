@@ -48,7 +48,7 @@ exports.login = (req, res, next) => {
     })
     .then((isEqual) => {
       console.log("isEqual", isEqual);
-      if (!isEqual) {
+      if (isEqual) {
         return res
           .status(401)
           .send({ message: "email or password is not found." });
