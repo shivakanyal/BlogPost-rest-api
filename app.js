@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-
 const multer = require("multer");
 const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
@@ -45,7 +44,6 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
 mongoose

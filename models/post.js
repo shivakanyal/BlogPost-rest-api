@@ -8,14 +8,27 @@ const postSchema = new Schema(
     },
     imageUrl: {
       type: String,
-      required: true,
+      // required: true,
     },
     content: {
       type: String,
       required: true,
     },
-    creator: {
-      type: Object,
+    category: {
+      type: String,
+      required: true,
+    },
+    creatorName: {
+      type: String,
+      required: true,
+    },
+    creatorId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    date: {
+      type: String,
       required: true,
     },
   },

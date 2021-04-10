@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const authHeader = req.get("Autherization");
+  const authHeader = req.get("Authorization");
   if (!authHeader) {
     return res.status(401).send({ message: "Not Authenticated." });
   }
@@ -15,6 +15,6 @@ module.exports = (req, res, next) => {
   if (!decodedToken) {
     return res.status(401).send({ message: "Not autherized." });
   }
-  req.userId = decodedToken.userId;
+  req.user = decodedToken;
   next();
 };
