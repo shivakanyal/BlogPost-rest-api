@@ -15,7 +15,6 @@ exports.signup = (req, res, next) => {
   const password = req.body.password;
 
   console.log("errors", errors.array());
-  console.log("data", email, name, password);
   bcrypt
     .hash(password, 12)
     .then((hashedPw) => {
@@ -37,8 +36,6 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log("email ----:", email);
-  console.log("password -----:", password);
   let loadedUser;
   User.findOne({ email: email })
     .then((user) => {
@@ -48,7 +45,6 @@ exports.login = (req, res, next) => {
           .send({ message: " user with this email could not be found." });
       }
       loadedUser = user;
-      console.log("user:", user);
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {

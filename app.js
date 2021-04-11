@@ -46,10 +46,13 @@ app.use((req, res, next) => {
 });
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
+
 mongoose
-  .connect("mongodb://localhost:27017/BloggingApp")
-  .then(() => {
-    console.log("app is running on port 8080");
-    app.listen(8080);
+  .connect(process.env.MONGODB_URL, { useNewUrlParser: true })
+  .then((result) => {
+    app.listen(process.env.PORT);
+    console.log("app is running on port " + process.env.PORT);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    console.log(err);
+  });
