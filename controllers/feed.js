@@ -48,12 +48,10 @@ exports.createPost = (req, res, next) => {
   // if (!req.file) {
   //   return res.status(422).send({ message: "No image Provided!" });
   // }
-  console.log("req.file", req.file);
   const imageUrl = req.file.path.replace("\\", "/");
   const title = req.body.title;
   const content = req.body.content;
   const category = req.body.category;
-  console.log("req.user", req.user);
   const post = new Post({
     title: title,
     content: content,
@@ -63,8 +61,6 @@ exports.createPost = (req, res, next) => {
     creatorId: req.user.userId,
     date: createDate(),
   });
-  console.log("req.get:", req.get("Authorization"));
-  console.log(title, content, category);
   post
     .save()
     .then((result) => {
@@ -115,15 +111,12 @@ exports.updatePost = (req, res, next) => {
   const category = req.body.category;
   let imageUrl = req.body.image;
 
-  console.log("data : ", title, content);
-
   if (req.file) {
     imageUrl = req.file.path.replace("\\", "/");
   }
   if (!imageUrl) {
     return res.status(422).send({ message: "Image is not Provided.." });
   }
-  console.log("imageUrl", imageUrl);
 
   Post.findById(postId)
     .then((post) => {
@@ -152,12 +145,9 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   const postId = req.params.postId;
-  console.log("postId", typeof postId);
   let post, user;
   try {
     post = await Post.findById(postId);
-    console.log("postId:", post.creatorId, "userId:", req.user);
-    console.log("post beforeName : ", post);
     if (!post) {
       return res.status(421).send({ message: "Post is not found!" });
     }
@@ -172,9 +162,7 @@ exports.deletePost = async (req, res, next) => {
     post = await Post.findByIdAndDelete(post._id);
     console.log("DeletedPost : ", post);
     res.status(200).send({ message: "Post is deleted successfully", post });
-    console.log("i am still running");
   } catch (err) {
-    console.log("this why is this error");
     res.status(500).send({ message: err.message });
   }
 };

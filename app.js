@@ -46,6 +46,9 @@ app.use((req, res, next) => {
 });
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
+app.use("/", (req, res, next) => {
+  res.send("welcome to blogPost.");
+});
 
 mongoose
   .connect(process.env.MONGODB_URL, { useNewUrlParser: true })

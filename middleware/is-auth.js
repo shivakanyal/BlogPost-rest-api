@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, "longSecretKey");
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
