@@ -45,9 +45,6 @@ app.use((req, res, next) => {
 });
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
-app.use("/", (req, res, next) => {
-  res.send("welcome to blogPost.");
-});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
