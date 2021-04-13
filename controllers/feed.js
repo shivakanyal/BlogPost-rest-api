@@ -111,6 +111,9 @@ exports.updatePost = (req, res, next) => {
   const category = req.body.category;
   let imageUrl = req.body.image;
 
+  console.log("salaam body bhai.", req.body);
+  console.log("salaam image bhai.", req.body.image);
+
   if (req.file) {
     imageUrl = req.file.path.replace("\\", "/");
   }

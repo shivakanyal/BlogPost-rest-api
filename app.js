@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
-
 const app = express();
 
 const { v4: uuidv4 } = require("uuid");
@@ -50,6 +49,12 @@ app.use("/", (req, res, next) => {
   res.send("welcome to blogPost.");
 });
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+  });
+}
 mongoose
   .connect(process.env.MONGODB_URL, { useNewUrlParser: true })
   .then((result) => {
