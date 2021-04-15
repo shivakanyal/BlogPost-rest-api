@@ -6,6 +6,7 @@ const User = require("../models/user");
 
 exports.signup = (req, res, next) => {
   const errors = validationResult(req);
+  console.log("errors:", errors);
   if (!errors.isEmpty()) {
     return res.status(422).send({ message: "validation failed." });
   }
@@ -13,6 +14,10 @@ exports.signup = (req, res, next) => {
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
+
+  // if(errors.array().length>=1){
+  //   return res.send()
+  // }
 
   console.log("errors", errors.array());
   bcrypt
@@ -60,8 +65,7 @@ exports.login = (req, res, next) => {
           userId: loadedUser._id.toString(),
           date: Date(),
         },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        process.env.JWT_SECRET
       );
       res.status(200).json({ token: token, userId: loadedUser._id.toString() });
     })
