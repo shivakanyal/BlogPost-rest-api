@@ -13,6 +13,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
+
 import { Link } from "react-router-dom";
 const useStyles = makeStyles(() => ({
   root: {
@@ -64,7 +65,7 @@ const Feed = ({
       />
       <CardMedia
         className={classes.media}
-        image={process.env.REACT_APP_API_URL + "/" + imageUrl}
+        image={imageUrl}
         title="Paella dish"
       />
       <CardContent>

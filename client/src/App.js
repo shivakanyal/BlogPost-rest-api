@@ -34,8 +34,9 @@ class App extends React.Component {
       });
   };
 
-  handleSubmit = (e, { id, title, content, category, image, history }) => {
+  handleSubmit = (e, { id, title, content, category, image, setLoader }) => {
     e.preventDefault();
+    setLoader(true);
     const feed = {
       title: title,
       content: content,
@@ -84,12 +85,16 @@ class App extends React.Component {
       },
     })
       .then((res) => {
+        if (res.status === 500) {
+          this.setState({ feeds: prevFeeds, filteredFeeds: prevFeeds });
+          throw new Error("some error occur please login again.");
+        }
         return res.json();
       })
       .then((result) => console.log("post is deleted successfully!"))
       .catch((err) => {
-        alert("Some error occur");
-        this.setState({ feeds: prevFeeds });
+        alert("some error occur please login again.");
+        this.setState({ feeds: prevFeeds, filteredFeeds: prevFeeds });
         console.log("inside error", err);
       });
   };
@@ -121,7 +126,6 @@ class App extends React.Component {
         window.location = "/articles";
       });
   };
-
   componentDidMount() {
     fetch(process.env.REACT_APP_API_URL + "/feed/posts", {
       method: "GET",

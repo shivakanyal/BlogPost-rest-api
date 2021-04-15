@@ -54,7 +54,7 @@ const FeedView = (props) => {
       />
       <CardMedia
         className={classes.media}
-        image={process.env.REACT_APP_API_URL + "/" + feed.imageUrl}
+        image={feed.imageUrl}
         title="Paella dish"
       />
       <CardContent>
